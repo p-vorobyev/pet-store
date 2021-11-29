@@ -24,6 +24,10 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    /*cache*/
+    implementation("org.hibernate:hibernate-jcache")
+    implementation("org.ehcache:ehcache:3.9.7")
+    /**/
     runtimeOnly("com.h2database:h2:1.4.200")
     runtimeOnly("org.postgresql:postgresql:42.3.1")
     implementation("com.auth0:java-jwt:3.18.2")
