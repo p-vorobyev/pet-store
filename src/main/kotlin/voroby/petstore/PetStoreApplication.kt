@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @SpringBootApplication
 @EnableJpaRepositories(
-    transactionManagerRef = "jpaTransaction",
     basePackages = ["voroby.petstore.repository"]
 )
 class PetStoreApplication

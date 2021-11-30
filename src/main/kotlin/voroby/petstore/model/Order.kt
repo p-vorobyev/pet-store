@@ -20,7 +20,10 @@ class Order(
     @Column(nullable = false)
     var shipped: Boolean = false,
 
-    @OneToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE])
+    @OneToOne(
+        cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE],
+        fetch = FetchType.LAZY
+    )
     @JoinColumn(name = "cart_id")
     var cart: Cart? = null
 ) : BaseEntity()
