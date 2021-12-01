@@ -9,7 +9,7 @@ abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "hibernate_sequence", sequenceName = "hibernate_sequence", allocationSize = 1)
-    val id: Long? = null
+    var id: Long? = null
 
     @Version
     var  version: Long? = null

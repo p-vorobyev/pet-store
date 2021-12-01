@@ -28,7 +28,9 @@ data class ProductDto(
     }
 }
 
-fun ProductDto.toProduct() {
-    //TODO
-    val product = Product()
+fun ProductDto.toProduct(): Product {
+    val product = Product(name, category, description, price)
+    product.id = id
+    product.version = version
+    return product
 }
