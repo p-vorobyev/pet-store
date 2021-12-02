@@ -4,13 +4,12 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "cart")
-class Cart: BaseEntity() {
+class Cart(
+    @Column(nullable = false)
+    var itemCount: Int = 0,
 
     @Column(nullable = false)
-    var itemCount: Int = 0
-
-    @Column(nullable = false)
-    var cartPrice: Double = 0.0
+    var cartPrice: Double = 0.0,
 
     @OneToMany(
         mappedBy = "cart",
@@ -19,5 +18,4 @@ class Cart: BaseEntity() {
         orphanRemoval = true
     )
     var cartLines: MutableSet<CartLine>? = mutableSetOf()
-
-}
+): BaseEntity()

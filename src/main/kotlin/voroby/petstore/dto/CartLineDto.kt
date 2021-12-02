@@ -10,21 +10,23 @@ data class CartLineDto(
 
     var quantity: Int,
 
-    var product: ProductDto
+    var product: ProductDto? = null
 ) {
     companion object {
-        fun of(cartLineDto: CartLineDto): CartLine {
-            val product: Product = cartLineDto.product.toProduct()
-            val cartLine = CartLine(cartLineDto.quantity, product)
-            cartLine.id = cartLineDto.id
-            cartLine.version = cartLineDto.version
-            return  cartLine
+        fun of(cartLine: CartLine): CartLineDto {
+            val product: Product? = cartLine.product
+            return CartLineDto(
+                cartLine.id ?: 0,
+                cartLine.version ?: 0,
+                cartLine.quantity,
+                product?.let { ProductDto.of(it) }
+            )
         }
     }
 }
 
 fun CartLineDto.toCartLine(): CartLine {
-    val cartLine = CartLine(quantity, product.toProduct())
+    val cartLine = CartLine(quantity, product?.toProduct())
     cartLine.id = id
     cartLine.version = version
     return cartLine
