@@ -4,23 +4,17 @@ import voroby.petstore.model.CartLine
 import voroby.petstore.model.Product
 
 data class CartLineDto(
-    var id: Long,
-
-    var version: Long,
-
     var quantity: Int,
 
     var product: ProductDto? = null
-) {
+): BaseVersionDto() {
     companion object {
         fun of(cartLine: CartLine): CartLineDto {
             val product: Product? = cartLine.product
-            return CartLineDto(
-                cartLine.id ?: 0,
-                cartLine.version ?: 0,
-                cartLine.quantity,
-                product?.let { ProductDto.of(it) }
-            )
+            val dto = CartLineDto(cartLine.quantity, product?.let { ProductDto.of(it) })
+            dto.id = cartLine.id ?: 0
+            dto.version = cartLine.version ?: 0
+            return dto
         }
     }
 }

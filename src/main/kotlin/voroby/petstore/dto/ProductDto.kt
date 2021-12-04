@@ -3,10 +3,6 @@ package voroby.petstore.dto
 import voroby.petstore.model.Product
 
 data class ProductDto(
-    var id: Long,
-
-    var version: Long,
-
     var name: String,
 
     var category: String,
@@ -14,17 +10,15 @@ data class ProductDto(
     var description: String,
 
     var price: Double = 0.0
-) {
+): BaseVersionDto() {
     companion object {
-        fun of(product: Product): ProductDto =
-            ProductDto(
-                product.id ?: 0,
-                product.version ?: 0,
-                product.name ?: "",
-                product.category ?: "",
-                product.description ?: "",
-                product.price
-            )
+        fun of(product: Product): ProductDto {
+         val dto = ProductDto(product.name ?: "", product.category ?: "",
+             product.description ?: "", product.price)
+         dto.id = product.id ?: 0
+         dto.version = product.version ?: 0
+         return dto
+        }
     }
 }
 

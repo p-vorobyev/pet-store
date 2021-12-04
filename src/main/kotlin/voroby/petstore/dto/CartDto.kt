@@ -4,26 +4,19 @@ import voroby.petstore.model.Cart
 import voroby.petstore.model.CartLine
 
 data class CartDto(
-    var id: Long,
-
-    var version: Long,
-
     var lines: Set<CartLineDto>,
 
     var itemCount: Int,
 
     var cartPrice: Double
-) {
+): BaseVersionDto() {
     companion object {
         fun of(cart: Cart): CartDto {
             val setCartLinesDto: Set<CartLineDto> = cart.cartLines?.map { CartLineDto.of(it) }?.toHashSet() ?: setOf()
-            return CartDto(
-                cart.id ?: 0,
-                cart.version ?: 0,
-                setCartLinesDto,
-                cart.itemCount,
-                cart.cartPrice
-            )
+            val dto = CartDto(setCartLinesDto, cart.itemCount, cart.cartPrice)
+            dto.id = cart.id ?: 0
+            dto.version = cart.version ?: 0
+            return dto
         }
     }
 }
