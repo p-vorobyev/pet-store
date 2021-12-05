@@ -1,7 +1,7 @@
 package voroby.petstore.dto
 
 open class BaseVersionDto(
-    var id: Long = 0,
+    var id: Long? = null,
 
-    var version: Long = 0
+    var version: Long? = null
 )
