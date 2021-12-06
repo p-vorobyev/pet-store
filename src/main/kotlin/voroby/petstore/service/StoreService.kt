@@ -16,8 +16,8 @@ import java.util.*
 @Transactional(readOnly = true)
 @Service
 class StoreService(
-    val orderRepo: OrderRepository,
-    val productRepo: ProductRepository
+    private val orderRepo: OrderRepository,
+    private val productRepo: ProductRepository
 ) {
 
     fun getAllProducts(): List<ProductDto> =
