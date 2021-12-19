@@ -6,6 +6,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.test.web.reactive.server.WebTestClient
 import voroby.petstore.config.NettyConfiguration
+import voroby.petstore.controller.OrderController
 import voroby.petstore.controller.ProductController
 import voroby.petstore.repository.OrderRepository
 import voroby.petstore.repository.ProductRepository
@@ -13,7 +14,8 @@ import voroby.petstore.service.StoreService
 
 @WebFluxTest(
     controllers = [
-        ProductController::class
+        ProductController::class,
+        OrderController::class
     ]
 )
 @Import(NettyConfiguration::class)

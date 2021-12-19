@@ -2,21 +2,24 @@ package voroby.petstore.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import reactor.core.publisher.Mono
 import voroby.petstore.service.StoreService
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.function.Supplier
 
 abstract class BaseController {
 
     @Autowired
     lateinit var storeService: StoreService
 
-    val executor: ExecutorService = Executors.newCachedThreadPool()
+    private val executor: ExecutorService = Executors.newCachedThreadPool()
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -28,6 +31,18 @@ abstract class BaseController {
             map[fieldName] = message
         }
         return Mono.just(map)
+    }
+
+    protected fun <T> futureFromSupplier(supplier: Supplier<T>): CompletableFuture<T> =
+        CompletableFuture.supplyAsync({supplier.get()}, executor::execute)
+
+    protected fun <T> monoResponse(future: CompletableFuture<T>): Mono<ResponseEntity<T>> {
+        return Mono
+            .fromFuture(future)
+            .map { dto -> ResponseEntity.ok().body(dto) }
+            .doOnError { ex ->
+                Mono.just(ResponseEntity.internalServerError().body(ex.message))
+            }
     }
 
 }
