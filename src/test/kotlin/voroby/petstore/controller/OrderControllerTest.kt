@@ -35,6 +35,8 @@ internal class OrderControllerTest: AbstractMvcTest() {
 
     @Test
     fun save() {
+        mockSecurity()
+
         val saved = dto.copy()
         saved.id = 1
         saved.version = 1
@@ -44,6 +46,7 @@ internal class OrderControllerTest: AbstractMvcTest() {
 
         val result = webClient.post()
             .uri(URI)
+            .header("Authorization", bearer)
             .contentType(APPLICATION_JSON)
             .body(Mono.just(dto), OrderDto::class.java)
             .exchange()
@@ -58,6 +61,8 @@ internal class OrderControllerTest: AbstractMvcTest() {
 
     @Test
     fun getAll() {
+        mockSecurity()
+
         val list = listOf(dto)
 
         `when`(service.getAllOrders())
@@ -65,6 +70,7 @@ internal class OrderControllerTest: AbstractMvcTest() {
 
         val result = webClient.get()
             .uri(URI)
+            .header("Authorization", bearer)
             .exchange()
             .expectStatus().isOk
             .expectBodyList(OrderDto::class.java)
@@ -81,11 +87,14 @@ internal class OrderControllerTest: AbstractMvcTest() {
 
     @Test
     fun delete() {
+        mockSecurity()
+
         `when`(service.deleteOrder(anyLong()))
             .thenReturn(true)
 
         val returnResult = webClient.delete()
             .uri("$URI/1")
+            .header("Authorization", bearer)
             .exchange()
             .expectStatus().isOk
             .expectBody(Boolean::class.java)

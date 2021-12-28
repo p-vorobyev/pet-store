@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
+import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -32,7 +33,7 @@ import voroby.petstore.service.UserService
     ]
 )
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Import(value = [NettyConfiguration::class, PetStoreApplication::class])
+@Import(value = [NettyConfiguration::class])
 abstract class AbstractMvcTest: AbstractProfileTest() {
 
     @Autowired
@@ -55,9 +56,12 @@ abstract class AbstractMvcTest: AbstractProfileTest() {
 
     var bearer = "Bearer "
 
+    val userDto = UserDto("anonymous")
+
     @BeforeAll
     fun login() {
-        val userDto = UserDto("anonymous")
+        mockSecurity()
+
         val returnResult: EntityExchangeResult<TokenDto> = webClient.post()
             .uri("/api/login")
             .contentType(MediaType.APPLICATION_JSON)
@@ -72,7 +76,22 @@ abstract class AbstractMvcTest: AbstractProfileTest() {
 
         assertEquals(true, tokenDto?.success)
 
-        bearer.plus(tokenDto?.token)
+        bearer = bearer.plus(tokenDto?.token)
+    }
+
+    protected fun mockSecurity() {
+        `when`(userService.exist(userDto.username))
+            .thenReturn(true)
+
+        val jwtServiceStub = JwtService(UserService())
+
+        `when`(jwtService.generateToken(userDto.username))
+            .thenReturn(jwtServiceStub.generateToken(userDto.username))
+
+        val token = bearer.replace("Bearer ", "")
+
+        `when`(jwtService.validate(token))
+            .thenReturn(jwtServiceStub.validate(token))
     }
 
 }

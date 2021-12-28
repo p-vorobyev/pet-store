@@ -51,8 +51,8 @@ class NettyConfiguration {
 
         return http.authorizeExchange {
             it.pathMatchers("/api/login").permitAll()
-            it.pathMatchers("/orders").hasRole("ROLE_USER")
-            it.pathMatchers("/products").hasRole("ROLE_USER")
+            it.pathMatchers("/orders").hasRole("USER")
+            it.pathMatchers("/products").hasRole("USER")
             it.anyExchange().authenticated()
         }
             .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)

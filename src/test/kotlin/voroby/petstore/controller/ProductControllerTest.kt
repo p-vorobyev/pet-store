@@ -15,6 +15,8 @@ internal class ProductControllerTest: AbstractMvcTest() {
 
     @Test
     fun allProducts() {
+        mockSecurity()
+
         val dto = ProductDto("Ball", "Sport", "For soccer", 45.0)
         dto.id = 1
         dto.version = 1
@@ -23,6 +25,7 @@ internal class ProductControllerTest: AbstractMvcTest() {
 
         val returnResult = webClient.get()
             .uri(URI)
+            .header("Authorization", bearer)
             .exchange()
             .expectStatus().isOk
             .expectBodyList(ProductDto::class.java)
@@ -36,6 +39,8 @@ internal class ProductControllerTest: AbstractMvcTest() {
 
     @Test
     fun save() {
+        mockSecurity()
+
         val dto = ProductDto("Shoes", "Travel", "Good shoes for adventure", 150.0)
 
         val saved = dto.copy()
@@ -46,6 +51,7 @@ internal class ProductControllerTest: AbstractMvcTest() {
 
         val result = webClient.post()
             .uri(URI)
+            .header("Authorization", bearer)
             .contentType(MediaType.APPLICATION_JSON)
             .body(Mono.just(dto), ProductDto::class.java)
             .exchange()
@@ -64,11 +70,14 @@ internal class ProductControllerTest: AbstractMvcTest() {
 
     @Test
     fun delete() {
+        mockSecurity()
+
         `when`(service.deleteProduct(anyLong()))
             .thenReturn(true)
 
         val result = webClient.delete()
             .uri("$URI/1")
+            .header("Authorization", bearer)
             .exchange()
             .expectStatus().isOk
             .expectBody(Boolean::class.java).returnResult()

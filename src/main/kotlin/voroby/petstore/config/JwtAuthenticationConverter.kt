@@ -11,9 +11,9 @@ class JwtAuthenticationConverter: ServerAuthenticationConverter {
     override fun convert(exchange: ServerWebExchange?): Mono<Authentication> {
         return Mono.justOrEmpty(exchange)
             .flatMap {
-                val header: String? = it.request.headers.getFirst("Authorization")
+                var header: String? = it.request.headers.getFirst("Authorization")
                 header?.let {
-                    header.replace("Bearer ", "")
+                    header = header?.replace("Bearer ", "")
                 }
                 Mono.justOrEmpty(header)
             }

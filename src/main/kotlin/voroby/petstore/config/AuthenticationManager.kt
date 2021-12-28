@@ -1,6 +1,5 @@
 package voroby.petstore.config
 
-import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -14,13 +13,13 @@ class AuthenticationManager(
 
     override fun authenticate(authentication: Authentication): Mono<Authentication> {
         val token = authentication.credentials as String
-        return jwtService.validate(token).handle<Authentication> { pair, mon ->
-            if (pair.first) {
-                UsernamePasswordAuthenticationToken(pair.second, null, mutableListOf(SimpleGrantedAuthority("ROLE_USER")))
+        return jwtService.validate(token).map {
+            if (it.first) {
+                UsernamePasswordAuthenticationToken(it.second, null, mutableListOf(SimpleGrantedAuthority("ROLE_USER")))
             } else {
-                mon.error(BadCredentialsException("Token validation failed."))
+                UsernamePasswordAuthenticationToken(null, null, mutableListOf())
             }
-        }.onErrorResume { Mono.empty() }
+        }
     }
 
 }

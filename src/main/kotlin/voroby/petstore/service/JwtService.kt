@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono
 import voroby.petstore.dto.TokenDto
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 
 private const val EXPIRATION_PERIOD_MILLIS = 600_000L
@@ -32,14 +33,16 @@ class JwtService(private val userService: UserService) {
         return Mono.just(pair)
     }
 
-    fun generateToken(subject: String): Mono<TokenDto> =
-        Mono.just(Instant.now().plusMillis(EXPIRATION_PERIOD_MILLIS))
+    fun generateToken(subject: String): Mono<TokenDto> {
+        val expiresAt = Instant.now().plusMillis(EXPIRATION_PERIOD_MILLIS)
+        return Mono.just(expiresAt)
             .map { instant ->
                 JWT.create()
                     .withSubject(subject)
                     .withExpiresAt(Date.from(instant))
                     .sign(Algorithm.HMAC256(SECRET))
             }.map { token ->
-                TokenDto(true, token, LocalDateTime.now())
+                TokenDto(true, token, LocalDateTime.ofInstant(expiresAt, ZoneId.systemDefault()))
             }
+    }
 }
