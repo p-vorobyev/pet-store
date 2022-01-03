@@ -22,16 +22,17 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     //implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     /*cache*/
     implementation("org.hibernate:hibernate-jcache")
-    implementation("org.ehcache:ehcache:3.9.7")
+    implementation("org.ehcache:ehcache:3.9.9")
+    implementation("org.redisson:redisson-hibernate-53:3.16.7")
     /**/
-    runtimeOnly("com.h2database:h2:1.4.200")
+    runtimeOnly("com.h2database:h2:2.0.204")
     runtimeOnly("org.postgresql:postgresql:42.3.1")
     implementation("com.auth0:java-jwt:3.18.2")
     /*Test*/

@@ -17,6 +17,9 @@
     <cache alias="ProductRepository#findByNameAndCategory"
            uses-template="product-template"/>
 
+    <cache alias="ProductRepository#findAll"
+           uses-template="product-template"/>
+
     <cache alias="default-update-timestamps-region">
         <expiry>
             <none/>
