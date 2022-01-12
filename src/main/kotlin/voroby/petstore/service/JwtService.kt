@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 
-private const val EXPIRATION_PERIOD_MILLIS = 600_000L
+private const val EXPIRATION_PERIOD_MILLIS = 1_800_000L
 
 private const val SECRET = "pet-store"
 

@@ -8,10 +8,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import reactor.core.publisher.Mono
+import voroby.petstore.config.StoreExecutor
 import voroby.petstore.service.StoreService
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import java.util.function.Supplier
 
 abstract class BaseController {
@@ -19,7 +18,8 @@ abstract class BaseController {
     @Autowired
     lateinit var storeService: StoreService
 
-    private val executor: ExecutorService = Executors.newCachedThreadPool()
+    @Autowired
+    lateinit var storeExecutor: StoreExecutor
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -34,7 +34,7 @@ abstract class BaseController {
     }
 
     protected fun <T> futureFromSupplier(supplier: Supplier<T>): CompletableFuture<T> =
-        CompletableFuture.supplyAsync({supplier.get()}, executor::execute)
+        CompletableFuture.supplyAsync({supplier.get()}, storeExecutor.executor::execute)
 
     protected fun <T> monoResponse(future: CompletableFuture<T>): Mono<ResponseEntity<T>> {
         return Mono

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.QueryHints
 import voroby.petstore.model.Product
 import javax.persistence.QueryHint
 
+const val allProducts = "select p from Product p"
+
 interface ProductRepository: JpaRepository<Product, Long> {
 
     @QueryHints(
@@ -22,7 +24,7 @@ interface ProductRepository: JpaRepository<Product, Long> {
             QueryHint(name = "org.hibernate.cacheRegion", value = "ProductRepository#findAll")
         ]
     )
-    @Query("select p from Product p")
+    @Query(allProducts)
     override fun findAll(): MutableList<Product>
 
 }

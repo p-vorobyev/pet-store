@@ -14,6 +14,7 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
 import voroby.petstore.config.NettyConfiguration
+import voroby.petstore.config.StoreExecutor
 import voroby.petstore.controller.LoginController
 import voroby.petstore.controller.OrderController
 import voroby.petstore.controller.ProductController
@@ -33,11 +34,14 @@ import voroby.petstore.service.UserService
     ]
 )
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Import(value = [NettyConfiguration::class])
+@Import(value = [NettyConfiguration::class, StoreExecutor::class])
 abstract class AbstractMvcTest: AbstractProfileTest() {
 
     @Autowired
     lateinit var webClient: WebTestClient
+
+    @Autowired
+    lateinit var storeExecutor: StoreExecutor
 
     @MockBean
     lateinit var service: StoreService

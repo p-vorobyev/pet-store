@@ -2,6 +2,7 @@ package voroby.petstore.service
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import reactor.core.publisher.Flux
 import voroby.petstore.dto.OrderDto
 import voroby.petstore.dto.ProductDto
 import voroby.petstore.dto.toOrder
@@ -11,6 +12,7 @@ import voroby.petstore.model.Order
 import voroby.petstore.model.Product
 import voroby.petstore.repository.OrderRepository
 import voroby.petstore.repository.ProductRepository
+import java.time.Duration
 import java.util.*
 
 @Transactional(readOnly = true)
@@ -22,6 +24,11 @@ class StoreService(
 
     fun getAllProducts(): List<ProductDto> =
         productRepo.findAll().map { ProductDto.of(it) }
+
+    fun streamAllProducts(): Flux<ProductDto> =
+        Flux
+            .fromStream(productRepo.findAll().map { ProductDto.of(it) }.stream())
+            .delayElements(Duration.ofSeconds(1))
 
     @Transactional
     fun saveProduct(dto: ProductDto): ProductDto =

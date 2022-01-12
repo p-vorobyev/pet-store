@@ -1,8 +1,10 @@
 package voroby.petstore.controller
 
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
+import org.springframework.http.MediaType.APPLICATION_NDJSON_VALUE
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import voroby.petstore.dto.ProductDto
 
@@ -16,6 +18,10 @@ class ProductController: BaseController() {
     @GetMapping
     fun getAll(): Mono<ResponseEntity<List<ProductDto>>> =
         monoResponse(futureFromSupplier(storeService::getAllProducts))
+
+    @GetMapping("/stream", produces = [APPLICATION_NDJSON_VALUE])
+    fun streamAllProducts(): Flux<ProductDto> =
+        futureFromSupplier(storeService::streamAllProducts).get()
 
     @PostMapping(consumes = [APPLICATION_JSON_VALUE])
     fun save(@RequestBody dto: ProductDto): Mono<ResponseEntity<ProductDto>> =
